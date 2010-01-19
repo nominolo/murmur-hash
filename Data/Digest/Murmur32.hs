@@ -68,8 +68,25 @@ hash32AddFoldable :: (Hashable32 a, Foldable c) => c a -> Hash32 -> Hash32
 hash32AddFoldable c !h0 = foldl' f h0 c
   where f h a = hash32Add a h
 
+-- | Create a hash using a custom seed.
+--
+-- The seed should be non-zero, but other than that can be an
+-- arbitrary number.  Different seeds will give different hashes, and
+-- thus (most likely) different hash collisions.
+hash32WithSeed :: Hashable32 a => Word32 -> a -> Hash32
+hash32WithSeed seed a = hash32End (hash32Add a (Hash32 seed))
+
+-- | Create a hash using the default seed.
 hash32 :: Hashable32 a => a -> Hash32
 hash32 = hash32WithSeed defaultSeed
+
+-- | Combine two hash generators.  E.g.,
+-- 
+-- @
+--   hashFoo (Foo a) = hash32AddInt 1 `combine` hash32Add a
+-- @
+combine :: (Hash32 -> Hash32) -> (Hash32 -> Hash32) -> (Hash32 -> Hash32)
+combine x y = y . x
 
 hash32End :: Hash32 -> Hash32
 hash32End (Hash32 h) =
@@ -77,12 +94,6 @@ hash32End (Hash32 h) =
       h2 = h1 * murmur_m
       h3 = h2 `xor` (h2 `shiftR` 15)
   in Hash32 h3
-
-hash32WithSeed :: Hashable32 a => Word32 -> a -> Hash32
-hash32WithSeed seed a = hash32End (hash32Add a (Hash32 seed))
-
-combine :: (Hash32 -> Hash32) -> (Hash32 -> Hash32) -> (Hash32 -> Hash32)
-combine x y = y . x
 
 defaultSeed :: Word32
 defaultSeed = 0xdeadbeef -- not 0, otherwise hash32 [0] == hash32 []

@@ -25,3 +25,4 @@ Library
 
   exposed-modules:
     Data.Digest.Murmur32
+    Data.Digest.Murmur64
