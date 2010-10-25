@@ -1,11 +1,11 @@
 Name:            murmur-hash
-Version:         0.1
+Version:         0.1.0.2
 License:         BSD3
 License-File:    LICENSE
 Author:          Thomas Schilling
 Maintainer:      Thomas Schilling <nominolo@googlemail.com>
 Homepage:        http://github.com/nominolo/murmur-hash
-Synopsis:        MurmurHash2 implementation for 
+Synopsis:        MurmurHash2 implementation for Haskell.
 Description:
   Implements MurmurHash2, a good, fast, general-purpose,
   non-cryptographic hashing function.  See
@@ -21,7 +21,7 @@ Cabal-Version:   >= 1.6
 
 Library
   Build-Depends:
-    base          >= 3.0 && < 4.3
+    base          >= 3.0 && < 4.4
 
   exposed-modules:
     Data.Digest.Murmur32
