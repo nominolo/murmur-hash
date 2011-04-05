@@ -22,8 +22,12 @@ Cabal-Version:   >= 1.6
 Library
   Build-Depends:
     base          >= 3.0 && < 4.4,
-    bytestring
+    bytestring    == 0.9.*
 
   exposed-modules:
     Data.Digest.Murmur32
     Data.Digest.Murmur64
+
+Source-repository head
+  Type:       git
+  Location:   git://github.com/nominolo/murmur-hash.git
