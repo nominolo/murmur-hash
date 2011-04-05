@@ -10,9 +10,9 @@ Portability : portable
 
 Type class and primitives for constructing 32 bit hashes using the
 MurmurHash2 algorithm.  See <http://murmurhash.googlepages.com> for
-details on MurmurHash2.                                             
+details on MurmurHash2.
 -}
-module Data.Digest.Murmur32 
+module Data.Digest.Murmur32
   ( Hash32, asWord32,
     Hashable32(..),
     hash32AddWord32, hash32AddInt, hash32, hash32WithSeed
@@ -22,6 +22,8 @@ where
 import Data.Word
 import Numeric ( showHex )
 import Data.Bits
+import qualified Data.ByteString as B
+import qualified Data.ByteString.Lazy as L
 import Data.Char ( ord )
 import Data.Foldable
 import Data.List ( unfoldr )
@@ -37,7 +39,7 @@ instance Show Hash32 where
 asWord32 :: Hash32 -> Word32
 asWord32 (Hash32 w) = w
 
--- | Instance for 
+-- | Instance for
 class Hashable32 a where
   hash32Add :: a -> Hash32 -> Hash32
 
@@ -57,7 +59,7 @@ hash32AddWord32 k (Hash32 h) =
   in Hash32 h2
 
 hash32AddInt :: Int -> Hash32 -> Hash32
-hash32AddInt !k0 
+hash32AddInt !k0
   | bitSize (undefined :: Int) <= 32     -- Int is 32 bits
     = hash32AddWord32 (fromIntegral k0)
   | otherwise                            -- Int is 64 bits
@@ -81,7 +83,7 @@ hash32 :: Hashable32 a => a -> Hash32
 hash32 = hash32WithSeed defaultSeed
 
 -- | Combine two hash generators.  E.g.,
--- 
+--
 -- @
 --   hashFoo (Foo a) = hash32AddInt 1 `combine` hash32Add a
 -- @
@@ -134,7 +136,7 @@ Here's the data flow graph:
 -- Instances
 
 instance Hashable32 Char where
-  hash32Add c = hash32AddInt (ord c) 
+  hash32Add c = hash32AddInt (ord c)
 
 instance Hashable32 Int where
   hash32Add = hash32AddInt
@@ -153,11 +155,11 @@ instance Hashable32 Integer where
    = hash32AddInt (fromIntegral i0)
    | otherwise
    -- Prefix by sign, then hash the raw data words, starting with LSB
-   = hash32Add (signum i0 > 0) `combine` 
+   = hash32Add (signum i0 > 0) `combine`
      hash32AddFoldable (unfoldr f (abs i0) :: [Word32])
     where
       f i | i == 0 = Nothing
-      f i = 
+      f i =
         let (i', a) = quotRem i maxWord in
         Just (fromIntegral a, i')
       maxWord = fromIntegral (maxBound :: Word32) + 1 :: Integer
@@ -191,3 +193,10 @@ instance (Hashable32 a, Hashable32 b, Hashable32 c, Hashable32 d)
     hash32Add a `combine` hash32Add b `combine`
     hash32Add c `combine` hash32Add d
 
+instance Hashable32 B.ByteString where
+  hash32Add = B.foldl go (hash32AddWord32 8)
+    where go acc b = acc `combine` hash32AddWord32 (fromIntegral b)
+
+instance Hashable32 L.ByteString where
+  hash32Add = L.foldl go (hash32AddWord32 9)
+    where go acc b = acc `combine` hash32AddWord32 (fromIntegral b)

@@ -10,9 +10,9 @@ Portability : portable
 
 Type class and primitives for constructing 64 bit hashes using the
 MurmurHash2 algorithm.  See <http://murmurhash.googlepages.com> for
-details on MurmurHash2.                                             
+details on MurmurHash2.
 -}
-module Data.Digest.Murmur64 
+module Data.Digest.Murmur64
   ( Hash64, asWord64,
     Hashable64(..),
     hash64AddWord64, hash64AddInt, hash64, hash64WithSeed, combine,
@@ -22,6 +22,8 @@ where
 import Data.Word
 import Numeric ( showHex )
 import Data.Bits
+import qualified Data.ByteString as B
+import qualified Data.ByteString.Lazy as L
 import Data.Char ( ord )
 import Data.Foldable
 import Data.List ( unfoldr )
@@ -76,7 +78,7 @@ hash64 :: Hashable64 a => a -> Hash64
 hash64 = hash64WithSeed defaultSeed
 
 -- | Combine two hash generators.  E.g.,
--- 
+--
 -- @
 --   hashFoo (Foo a) = hash64AddInt 1 `combine` hash64Add a
 -- @
@@ -129,7 +131,7 @@ Here's the data flow graph:
 -- Instances
 
 instance Hashable64 Char where
-  hash64Add c = hash64AddInt (ord c) 
+  hash64Add c = hash64AddInt (ord c)
 
 instance Hashable64 Int where
   hash64Add = hash64AddInt
@@ -148,11 +150,11 @@ instance Hashable64 Integer where
    = hash64AddInt (fromIntegral i0)
    | otherwise
    -- Prefix by sign, then hash the raw data words, starting with LSB
-   = hash64Add (signum i0 > 0) `combine` 
+   = hash64Add (signum i0 > 0) `combine`
      hash64AddFoldable (unfoldr f (abs i0) :: [Word64])
     where
       f i | i == 0 = Nothing
-      f i = 
+      f i =
         let (i', a) = quotRem i maxWord in
         Just (fromIntegral a, i')
       maxWord = fromIntegral (maxBound :: Word64) + 1 :: Integer
@@ -186,3 +188,10 @@ instance (Hashable64 a, Hashable64 b, Hashable64 c, Hashable64 d)
     hash64Add a `combine` hash64Add b `combine`
     hash64Add c `combine` hash64Add d
 
+instance Hashable64 B.ByteString where
+  hash64Add = B.foldl go (hash64AddWord64 8)
+    where go acc b = acc `combine` hash64AddWord64 (fromIntegral b)
+
+instance Hashable64 L.ByteString where
+  hash64Add = L.foldl go (hash64AddWord64 9)
+    where go acc b = acc `combine` hash64AddWord64 (fromIntegral b)
