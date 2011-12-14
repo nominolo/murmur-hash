@@ -21,7 +21,7 @@ Cabal-Version:   >= 1.6
 
 Library
   Build-Depends:
-    base          >= 3.0 && < 4.5,
+    base          >= 3.0 && < 4.6,
     bytestring    == 0.9.*
 
   exposed-modules:
