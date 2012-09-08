@@ -21,8 +21,8 @@ Cabal-Version:   >= 1.6
 
 Library
   Build-Depends:
-    base          >= 3.0 && < 4.6,
-    bytestring    == 0.9.*
+    base          >= 3.0 && < 4.7,
+    bytestring    >= 0.9 && < 0.11
 
   exposed-modules:
     Data.Digest.Murmur32
