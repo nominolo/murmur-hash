@@ -13,11 +13,12 @@ Description:
   .
   This implementation is pure Haskell, so it might be a bit slower
   than a C FFI binding.
-                 
+
 Category:        Data, Digest
 Stability:       provisional
 Build-Type:      Simple
 Cabal-Version:   >= 1.6
+Extra-Source-Files: changelog.md
 
 Library
   Build-Depends:
