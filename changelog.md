@@ -1,3 +1,7 @@
+### 0.1.0.9
+
+  - Bump dependency ranges for GHC 8.0
+
 ### 0.1.0.8
 
   - Bump dependency ranges for GHC 7.10
