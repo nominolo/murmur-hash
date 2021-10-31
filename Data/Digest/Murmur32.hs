@@ -19,13 +19,13 @@ module Data.Digest.Murmur32
   )
 where
 
-import Data.Word
+import Data.Word ( Word32 )
 import Numeric ( showHex )
-import Data.Bits
+import Data.Bits ( Bits(xor, shiftR), FiniteBits(finiteBitSize) )
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as L
 import Data.Char ( ord )
-import Data.Foldable
+import Data.Foldable ( Foldable(foldl') )
 import Data.List ( unfoldr )
 
 -- | A 32 bit hash.
@@ -39,7 +39,6 @@ instance Show Hash32 where
 asWord32 :: Hash32 -> Word32
 asWord32 (Hash32 w) = w
 
--- | Instance for
 class Hashable32 a where
   hash32Add :: a -> Hash32 -> Hash32
 
@@ -60,7 +59,7 @@ hash32AddWord32 k (Hash32 h) =
 
 hash32AddInt :: Int -> Hash32 -> Hash32
 hash32AddInt !k0
-  | bitSize (undefined :: Int) <= 32     -- Int is 32 bits
+  | finiteBitSize (undefined :: Int) <= 32     -- Int is 32 bits
     = hash32AddWord32 (fromIntegral k0)
   | otherwise                            -- Int is 64 bits
     = hash32AddWord32 (fromIntegral k0) `combine`

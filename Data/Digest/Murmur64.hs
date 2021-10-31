@@ -19,13 +19,13 @@ module Data.Digest.Murmur64
   )
 where
 
-import Data.Word
+import Data.Word ( Word64 )
 import Numeric ( showHex )
-import Data.Bits
+import Data.Bits ( Bits(xor, shiftR) )
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as L
 import Data.Char ( ord )
-import Data.Foldable
+import Data.Foldable ( Foldable(foldl') )
 import Data.List ( unfoldr )
 
 -- | A 64 bit hash.
@@ -66,7 +66,7 @@ hash64AddFoldable c !h0 = foldl' f h0 c
   where f h a = hash64Add a h
 
 -- | Create a hash using a custom seed.
---h
+--
 -- The seed should be non-zero, but other than that can be an
 -- arbitrary number.  Different seeds will give different hashes, and
 -- thus (most likely) different hash collisions.

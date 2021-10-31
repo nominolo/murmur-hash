@@ -1,6 +1,10 @@
 murmur-hash
 ===========
 
+<div style="background:#ffeedd; padding: 0.5em">
+New maintainer needed. Let me know if you're interested.
+</div>
+
 A simple, Haskell-only implementation of [MurmurHash2][1].
 
 Two variants are provided: 32 bit and 64 bits.  We do not simply use

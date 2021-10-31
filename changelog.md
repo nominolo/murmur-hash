@@ -1,3 +1,8 @@
+### 0.1.0.10
+
+  - Replace use of deprecated `bitSize` by `finiteBitSize`
+  - Bump `bytestring` dependency to allow `0.11`
+
 ### 0.1.0.9
 
   - Bump dependency ranges for GHC 8.0
