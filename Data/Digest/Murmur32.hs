@@ -13,7 +13,7 @@ MurmurHash2 algorithm.  See <http://murmurhash.googlepages.com> for
 details on MurmurHash2.
 -}
 module Data.Digest.Murmur32
-  ( Hash32, asWord32,
+  ( Hash32, asWord32, asHash32,
     Hashable32(..),
     hash32AddWord32, hash32AddInt, hash32, hash32WithSeed
   )
@@ -38,6 +38,10 @@ instance Show Hash32 where
 -- | Extract 32 bit word from hash.
 asWord32 :: Hash32 -> Word32
 asWord32 (Hash32 w) = w
+
+-- | Coerce a 32 bit word into a hash. This does not hash the input.
+asHash32 :: Word32 -> Hash32
+asHash32 = Hash32
 
 class Hashable32 a where
   hash32Add :: a -> Hash32 -> Hash32
