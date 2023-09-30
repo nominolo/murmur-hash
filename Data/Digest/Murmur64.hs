@@ -189,9 +189,9 @@ instance (Hashable64 a, Hashable64 b, Hashable64 c, Hashable64 d)
     hash64Add c `combine` hash64Add d
 
 instance Hashable64 B.ByteString where
-  hash64Add = B.foldl go (hash64AddWord64 8)
-    where go acc b = acc `combine` hash64AddWord64 (fromIntegral b)
+  hash64Add bs h = B.foldl' go (hash64AddWord64 8 h) bs
+    where go acc b = hash64AddWord64 (fromIntegral b) acc
 
 instance Hashable64 L.ByteString where
-  hash64Add = L.foldl go (hash64AddWord64 9)
-    where go acc b = acc `combine` hash64AddWord64 (fromIntegral b)
+  hash64Add bs h = L.foldl' go (hash64AddWord64 9 h) bs
+    where go acc b = hash64AddWord64 (fromIntegral b) acc

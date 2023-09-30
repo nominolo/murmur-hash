@@ -193,9 +193,9 @@ instance (Hashable32 a, Hashable32 b, Hashable32 c, Hashable32 d)
     hash32Add c `combine` hash32Add d
 
 instance Hashable32 B.ByteString where
-  hash32Add = B.foldl go (hash32AddWord32 8)
-    where go acc b = acc `combine` hash32AddWord32 (fromIntegral b)
+  hash32Add bs h = B.foldl' go (hash32AddWord32 8 h) bs
+    where go acc b = hash32AddWord32 (fromIntegral b) acc
 
 instance Hashable32 L.ByteString where
-  hash32Add = L.foldl go (hash32AddWord32 9)
-    where go acc b = acc `combine` hash32AddWord32 (fromIntegral b)
+  hash32Add bs h = L.foldl' go (hash32AddWord32 9 h) bs
+    where go acc b = hash32AddWord32 (fromIntegral b) acc
