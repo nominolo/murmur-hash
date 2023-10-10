@@ -8,3 +8,4 @@ TAGS
 config.mk
 *.elc
 .stack-work/
+/dist-newstyle/
