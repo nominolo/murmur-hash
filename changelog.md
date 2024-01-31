@@ -1,3 +1,8 @@
+### Unreleased
+
+  - Introduce `asHash64` and `asHash32` which allow construction of `Hash64`
+    and `Hash32` respectively from their underlying word representation.
+
 ### 0.1.0.10
 
   - Replace use of deprecated `bitSize` by `finiteBitSize`

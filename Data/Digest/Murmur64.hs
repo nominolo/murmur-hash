@@ -13,7 +13,7 @@ MurmurHash2 algorithm.  See <http://murmurhash.googlepages.com> for
 details on MurmurHash2.
 -}
 module Data.Digest.Murmur64
-  ( Hash64, asWord64,
+  ( Hash64, asWord64, asHash64,
     Hashable64(..),
     hash64AddWord64, hash64AddInt, hash64, hash64WithSeed, combine,
   )
@@ -38,6 +38,10 @@ instance Show Hash64 where
 -- | Extract 64 bit word from hash.
 asWord64 :: Hash64 -> Word64
 asWord64 (Hash64 w) = w
+
+-- | Coerce a 64 bit word into a hash. This does not hash the input.
+asHash64 :: Word64 -> Hash64
+asHash64 = Hash64
 
 class Hashable64 a where
   hash64Add :: a -> Hash64 -> Hash64
