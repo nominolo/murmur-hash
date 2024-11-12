@@ -1,5 +1,5 @@
 *~
-dist/*
+dist/
 *.hi
 *.o
 Setup.exe*
@@ -9,3 +9,4 @@ config.mk
 *.elc
 .stack-work/
 /dist-newstyle/
+stack*.yaml.lock
