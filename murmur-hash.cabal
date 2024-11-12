@@ -1,7 +1,6 @@
 Cabal-Version:   1.18
 Name:            murmur-hash
-Version:         0.1.0.10
-x-revision:      1
+Version:         0.1.0.11
 License:         BSD3
 License-File:    LICENSE
 Author:          Thomas Schilling
